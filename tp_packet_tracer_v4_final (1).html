@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>TP Cisco Packet Tracer — DesCODEuses Marseille</title>
+<meta name="author" content="LUKUNKU KIBILA SARAH — Coordinatrice pédagogique, DesCODEuses">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --rose:#E8006B;--rose-l:#FCE0EE;--rose-ll:#FFF0F7;--rose-d:#B8004F;
+  --blue-50:#E6F1FB;--blue-100:#B5D4F4;--blue-800:#0C447C;
+  --teal-50:#E1F5EE;--teal-100:#9FE1CB;--teal-400:#1D9E75;--teal-800:#085041;
+  --amber-50:#FAEEDA;--amber-100:#FAC775;--amber-800:#633806;
+  --coral-50:#FAECE7;--coral-800:#712B13;
+  --g50:#F8F7F4;--g100:#EDECE8;--g200:#D4D2CA;--g400:#9B9890;--g800:#2C2C2A;
+  --bg:#F5F4F1;--white:#FFFFFF;
+  --tx:#18181A;--tx2:#54534F;--tx3:#909088;
+  --bd:rgba(0,0,0,0.09);--bd2:rgba(0,0,0,0.16);
+  --f:'DM Sans',-apple-system,sans-serif;
+  --fd:'Syne',-apple-system,sans-serif;
+  --fm:'DM Mono','Courier New',monospace;
+}
+html{font-size:16px;-webkit-text-size-adjust:100%;text-size-adjust:100%;}
+body{font-family:var(--f);background:var(--bg);color:var(--tx);min-height:100vh;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+/* ══ LOCK — fond clair ══ */
+#lock{
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(160deg,#FFF0F7 0%,#F5F4F1 55%,#EDF4FF 100%);
+  display:flex;align-items:flex-start;justify-content:center;
+  padding:24px 16px 40px;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+  transition:opacity .3s,visibility .3s;
+}
+#lock.off{opacity:0;visibility:hidden;pointer-events:none;}
+
+.lk{
+  background:var(--white);
+  border:1.5px solid rgba(232,0,107,.15);
+  border-radius:24px;
+  padding:28px 24px 24px;
+  width:100%;max-width:400px;
+  box-shadow:0 8px 32px rgba(232,0,107,.10),0 2px 8px rgba(0,0,0,.06);
+  text-align:center;
+  margin-top:auto;margin-bottom:auto;
+}
+.lk-logo{margin-bottom:20px;display:flex;justify-content:center;}
+.lk-logo svg{width:clamp(140px,50vw,180px);height:auto;}
+.lk-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--rose-l);color:var(--rose);
+  font-family:var(--fd);font-size:11px;font-weight:600;
+  padding:5px 12px;border-radius:99px;
+  border:1px solid rgba(232,0,107,.2);
+  margin-bottom:16px;
+}
+.lk-dot{width:6px;height:6px;border-radius:50%;background:var(--rose);}
+.lk-title{font-family:var(--fd);font-size:clamp(22px,5vw,26px);font-weight:700;color:var(--tx);margin-bottom:8px;line-height:1.2;}
+.lk-sub{font-size:15px;color:var(--tx2);line-height:1.6;margin-bottom:22px;}
+.lk-sub strong{color:var(--rose);font-weight:600;}
+.lk-lbl{display:block;text-align:left;font-size:14px;font-weight:500;color:var(--tx2);margin-bottom:8px;}
+.lk-field{position:relative;margin-bottom:12px;}
+
+/* font-size:16px = interdit le zoom auto iOS sur focus */
+.lk-input{
+  width:100%;padding:16px 52px 16px 16px;
+  font-size:16px;font-family:var(--f);
+  background:var(--g50);border:1.5px solid var(--bd2);
+  border-radius:12px;color:var(--tx);
+  outline:none;-webkit-appearance:none;appearance:none;
+  touch-action:manipulation;
+  transition:border-color .2s,box-shadow .2s;
+}
+.lk-input:focus{border-color:var(--rose);box-shadow:0 0 0 3px rgba(232,0,107,.12);background:var(--white);}
+.lk-input::placeholder{color:var(--tx3);}
+
+/* zone de tap 52px min */
+.lk-eye{
+  position:absolute;right:0;top:0;bottom:0;width:52px;
+  display:flex;align-items:center;justify-content:center;
+  background:none;border:none;cursor:pointer;color:var(--tx3);
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+}
+.lk-eye:active{color:var(--tx2);}
+
+/* bouton 52px min, tactile */
+.lk-btn{
+  width:100%;min-height:52px;padding:14px 16px;
+  background:var(--rose);border:none;border-radius:12px;
+  color:#fff;font-size:17px;font-weight:700;font-family:var(--fd);
+  cursor:pointer;letter-spacing:.02em;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  -webkit-appearance:none;appearance:none;
+  box-shadow:0 4px 16px rgba(232,0,107,.28);
+  transition:background .15s,transform .1s;
+}
+.lk-btn:active{background:var(--rose-d);transform:scale(.98);}
+.lk-btn:disabled{background:var(--g400);box-shadow:none;cursor:not-allowed;}
+
+.lk-err{display:none;margin-top:10px;padding:12px 14px;border-radius:10px;background:#FEF2F2;border:1px solid #FCA5A5;font-size:14px;color:#B91C1C;text-align:left;line-height:1.5;}
+.lk-err.on{display:block;}
+.lk-author{margin-top:20px;padding-top:16px;border-top:1px solid var(--g100);font-size:12px;color:var(--tx3);line-height:1.7;}
+.lk-author strong{color:var(--rose);font-weight:600;}
+
+/* ══ TOPBAR ══ */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;background:rgba(255,255,255,.96);
+  border-bottom:1px solid var(--bd);
+  position:sticky;top:0;z-index:100;gap:10px;min-height:52px;
+}
+.tb-l{display:flex;align-items:center;gap:10px;min-width:0;flex:1;}
+.tb-logo{flex-shrink:0;}
+.tb-logo svg{height:22px;width:auto;}
+.tb-logo svg path{fill:var(--tx);}
+.tb-sep{width:1px;height:20px;background:var(--bd2);flex-shrink:0;}
+.tb-info{min-width:0;}
+.tb-title{font-family:var(--fd);font-size:13px;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tb-sub{font-size:11px;color:var(--tx3);white-space:nowrap;}
+.tb-r{display:flex;align-items:center;gap:6px;flex-shrink:0;}
+.badge{font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;white-space:nowrap;}
+.b-rose{background:var(--rose-l);color:var(--rose);border:1px solid rgba(232,0,107,.2);}
+.b-blue{background:var(--blue-50);color:var(--blue-800);border:1px solid var(--blue-100);}
+.b-teal{background:var(--teal-50);color:var(--teal-800);border:1px solid var(--teal-100);}
+.b-amber{background:var(--amber-50);color:var(--amber-800);border:1px solid var(--amber-100);}
+@media(max-width:380px){#score-badge{display:none!important;}}
+
+/* ══ PAGE ══ */
+.page{max-width:880px;margin:0 auto;padding:16px 14px 80px;}
+@media(min-width:640px){.page{padding:24px 24px 80px;}}
+
+/* ══ HERO ══ */
+.hero{border-radius:20px;overflow:hidden;margin-bottom:16px;border:1px solid var(--bd);box-shadow:0 2px 8px rgba(0,0,0,.06);}
+.hero-top{background:#1A0A2E;padding:22px 18px 18px;position:relative;overflow:hidden;}
+.hero-top::after{content:'';position:absolute;top:-50%;right:-5%;width:45%;height:200%;background:radial-gradient(ellipse,rgba(232,0,107,.22) 0%,transparent 65%);pointer-events:none;}
+.hero-ey{font-size:11px;font-weight:600;letter-spacing:.10em;color:rgba(232,0,107,.85);text-transform:uppercase;margin-bottom:8px;font-family:var(--fd);}
+.hero h1{font-family:var(--fd);font-size:clamp(20px,5vw,30px);font-weight:700;color:#fff;line-height:1.2;margin-bottom:8px;position:relative;z-index:1;}
+.hero h1 em{color:#F472B6;font-style:normal;}
+.hero-desc{font-size:13px;color:rgba(255,255,255,.5);line-height:1.65;position:relative;z-index:1;}
+.hero-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px;position:relative;z-index:1;}
+.chip{font-size:11px;font-weight:500;padding:4px 10px;border-radius:99px;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.65);background:rgba(255,255,255,.07);}
+.hero-bot{background:var(--white);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--bd);}
+.hero-stats{display:flex;gap:16px;flex-wrap:wrap;}
+.h-stat{text-align:center;}
+.sv{font-size:24px;font-weight:700;color:var(--rose);font-family:var(--fd);line-height:1;}
+.sl{font-size:11px;color:var(--tx3);margin-top:2px;}
+.author-pill{display:flex;align-items:center;gap:10px;background:var(--g50);border:1px solid var(--bd2);border-radius:99px;padding:6px 14px 6px 6px;flex-shrink:0;}
+@media(max-width:500px){.author-pill{border-radius:14px;width:100%;}}
+.av{width:32px;height:32px;border-radius:50%;background:var(--rose);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;font-family:var(--fd);flex-shrink:0;}
+.av-name{font-size:12px;font-weight:600;color:var(--tx);}
+.av-role{font-size:11px;color:var(--tx3);}
+
+/* ══ PROGRESS ══ */
+.prog{margin-bottom:16px;}
+.prog-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.prog-top span{font-size:14px;color:var(--tx2);}
+.prog-top strong{font-size:14px;font-weight:600;color:var(--tx);}
+.prog-track{height:6px;background:var(--g100);border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--rose),#FF7EB3);border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1);width:0%;}
+
+/* ══ CARD ══ */
+.card{background:var(--white);border:1px solid var(--bd);border-radius:20px;padding:18px 14px;margin-bottom:14px;box-shadow:0 1px 4px rgba(0,0,0,.05);}
+@media(min-width:640px){.card{padding:20px;}}
+.sec-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--tx3);margin-bottom:12px;font-family:var(--fd);}
+
+/* ══ TOPO ══ */
+.topo-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;background:var(--g50);padding:10px;}
+.scroll-hint{text-align:center;font-size:10px;color:var(--tx3);padding-top:5px;letter-spacing:.04em;}
+@media(min-width:680px){.scroll-hint{display:none;}}
+.topo-svg{display:block;min-width:500px;width:100%;}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:12px;}
+.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:380px;}
+.tbl thead th{text-align:left;padding:7px 10px;font-size:10px;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--bd);font-family:var(--fd);white-space:nowrap;}
+.tbl tbody td{padding:9px 10px;border-bottom:1px solid var(--bd);color:var(--tx);}
+.tbl tbody tr:last-child td{border-bottom:none;}
+.tbl .m{font-family:var(--fm);font-size:12px;color:var(--blue-800);}
+.eq{display:inline-block;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;white-space:nowrap;}
+
+/* ══ STEPS ══ */
+.steps{display:flex;flex-direction:column;gap:10px;}
+.step{background:var(--white);border:1.5px solid var(--bd);border-radius:20px;overflow:hidden;transition:border-color .2s,box-shadow .2s;box-shadow:0 1px 3px rgba(0,0,0,.04);}
+.step.active{border-color:var(--rose);box-shadow:0 0 0 3px rgba(232,0,107,.07),0 4px 12px rgba(0,0,0,.06);}
+.step.done{border-color:var(--teal-400);opacity:.74;}
+
+/* zone tap min 60px */
+.step-hd{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 14px;cursor:pointer;user-select:none;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  min-height:60px;transition:background .15s;
+}
+.step-hd:active{background:var(--g50);}
+
+.snum{width:36px;height:36px;min-width:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;font-family:var(--fd);border:1.5px solid var(--bd2);color:var(--tx3);background:var(--g100);transition:all .2s;flex-shrink:0;}
+.step.active .snum{background:var(--rose-l);color:var(--rose);border-color:var(--rose);}
+.step.done .snum{background:var(--teal-50);color:var(--teal-800);border-color:var(--teal-400);}
+.dn-chk{display:none;}
+.step.done .dn-chk{display:inline;}
+.step.done .snum-txt{display:none;}
+.smeta{flex:1;min-width:0;}
+.smeta h3{font-size:15px;font-weight:600;color:var(--tx);margin-bottom:2px;line-height:1.35;overflow-wrap:break-word;}
+.smeta p{font-size:12px;color:var(--tx3);}
+.stag{font-size:11px;font-weight:600;padding:4px 10px;border-radius:99px;flex-shrink:0;white-space:nowrap;}
+@media(max-width:480px){.stag{display:none;}}
+.schev{width:18px;height:18px;min-width:18px;flex-shrink:0;color:var(--tx3);transition:transform .25s;}
+.step.active .schev{transform:rotate(90deg);}
+.sbody{display:none;padding:0 14px 18px;}
+.step.active .sbody{display:block;animation:sd .2s ease;}
+@keyframes sd{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+.sdiv{height:1px;background:var(--bd);margin-bottom:14px;}
+
+/* ══ CONTENU ══ */
+.narr{background:var(--rose-ll);border-left:3px solid var(--rose);border-radius:0 10px 10px 0;padding:12px 14px;font-size:14px;font-style:italic;color:#6B002E;line-height:1.7;margin-bottom:14px;}
+.actions{list-style:none;padding:0;margin:0 0 14px;}
+.act{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--bd);font-size:14px;color:var(--tx);line-height:1.65;}
+.act:last-child{border-bottom:none;}
+.an{width:24px;height:24px;min-width:24px;border-radius:50%;background:var(--rose-l);color:var(--rose);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-top:2px;border:1px solid rgba(232,0,107,.2);font-family:var(--fd);flex-shrink:0;}
+code{font-family:var(--fm);font-size:12px;background:var(--g100);padding:2px 6px;border-radius:4px;color:var(--blue-800);word-break:break-all;}
+kbd{font-family:var(--fm);font-size:12px;background:var(--g200);color:var(--g800);padding:2px 7px;border-radius:4px;border:1px solid var(--g400);}
+
+.cmd{background:#0F172A;border-radius:12px;padding:14px;margin:10px 0;font-family:var(--fm);font-size:12.5px;line-height:1.9;color:#CBD5E1;border:1px solid rgba(255,255,255,.05);overflow-x:auto;-webkit-overflow-scrolling:touch;position:relative;}
+.cmd-lbl{display:block;font-size:10px;color:rgba(255,255,255,.2);font-family:var(--f);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px;}
+.cp{color:#F472B6;}.cc{color:#93C5FD;}.cm{color:#4B5563;font-style:italic;}.co{color:#6EE7B7;}
+
+.tip{background:var(--amber-50);border:1px solid var(--amber-100);border-radius:10px;padding:12px 14px;font-size:13.5px;color:var(--amber-800);line-height:1.65;display:flex;gap:8px;align-items:flex-start;margin:10px 0;}
+
+/* ══ QUIZ — boutons touch-friendly ══ */
+.quiz-wrap{margin-top:18px;}
+.quiz-q{font-size:15px;font-weight:600;color:var(--tx);margin-bottom:12px;line-height:1.5;}
+.quiz-opts{display:flex;flex-direction:column;gap:8px;}
+
+/* min-height 52px pour le touch */
+.qopt{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:14px;text-align:left;
+  border:1.5px solid var(--bd2);border-radius:12px;
+  background:var(--white);color:var(--tx);
+  font-size:14px;font-family:var(--f);
+  cursor:pointer;line-height:1.45;min-height:52px;width:100%;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  -webkit-appearance:none;appearance:none;
+  transition:background .15s,border-color .15s;
+}
+.qopt:active{background:var(--g50);}
+.odot{width:20px;height:20px;min-width:20px;border-radius:50%;border:1.5px solid var(--g400);flex-shrink:0;margin-top:1px;transition:all .2s;}
+.qopt.ok{background:var(--teal-50);border-color:var(--teal-400);color:var(--teal-800);}
+.qopt.ok .odot{background:var(--teal-400);border-color:var(--teal-400);}
+.qopt.ko{background:var(--coral-50);border-color:#D85A30;color:var(--coral-800);}
+.qopt.ko .odot{background:#D85A30;border-color:#D85A30;}
+
+.fb{display:none;font-size:14px;padding:12px 14px;border-radius:10px;margin-top:8px;line-height:1.55;}
+.fb.on{display:flex;align-items:flex-start;gap:8px;}
+.fb.ok{background:var(--teal-50);color:var(--teal-800);border:1px solid var(--teal-100);}
+.fb.ko{background:var(--coral-50);color:var(--coral-800);border:1px solid rgba(153,60,29,.2);}
+.fb-ic{width:16px;height:16px;min-width:16px;flex-shrink:0;margin-top:2px;}
+
+/* ══ BOUTON SUIVANT — pleine largeur, tactile ══ */
+.btn-nxt{
+  display:none;margin-top:18px;
+  padding:14px 20px;min-height:52px;border-radius:12px;
+  border:1.5px solid var(--rose);background:var(--rose-l);color:var(--rose);
+  font-size:15px;font-weight:600;font-family:var(--fd);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  touch-action:manipulation;-webkit-appearance:none;appearance:none;
+  width:100%;align-items:center;justify-content:center;gap:8px;
+  transition:background .15s,transform .1s;
+}
+.btn-nxt:active{background:rgba(232,0,107,.14);transform:scale(.98);}
+.btn-nxt.on{display:flex;}
+
+/* ══ DONE ══ */
+.done{display:none;background:var(--white);border:1px solid var(--bd);border-radius:24px;padding:28px 18px;margin-top:14px;text-align:center;box-shadow:0 4px 16px rgba(0,0,0,.07);animation:fu .4s ease;}
+@keyframes fu{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.done-ring{width:64px;height:64px;border-radius:50%;background:var(--teal-50);border:2px solid var(--teal-400);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
+.done h2{font-family:var(--fd);font-size:clamp(20px,4vw,26px);font-weight:700;color:var(--tx);margin-bottom:8px;}
+.done>p{font-size:15px;color:var(--tx2);line-height:1.65;}
+.done-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 0;}
+@media(max-width:360px){.done-grid{grid-template-columns:1fr 1fr;}}
+.dc{background:var(--g50);border-radius:12px;border:1px solid var(--bd);padding:14px 8px;}
+.dc .dv{font-size:26px;font-weight:700;color:var(--rose);font-family:var(--fd);}
+.dc .dl{font-size:11px;color:var(--tx3);margin-top:3px;}
+.done-next{margin-top:18px;padding-top:14px;border-top:1px solid var(--bd);}
+.done-next p{font-size:14px;color:var(--tx2);margin-bottom:10px;}
+.done-next-items{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.dn-item{border-radius:12px;padding:10px 14px;font-size:13px;border:1px solid;}
+
+/* ══ FOOTER ══ */
+footer{max-width:880px;margin:0 auto;padding:18px 14px 32px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border-top:1px solid var(--bd);}
+.ft-logo svg{height:20px;width:auto;}
+.ft-logo svg path{fill:var(--tx3);}
+.ft-meta{font-size:12px;color:var(--tx3);line-height:1.7;text-align:right;}
+.ft-meta strong{color:var(--tx2);font-weight:600;}
+@media(max-width:520px){footer{flex-direction:column;}.ft-meta{text-align:left;}}
+</style>
+</head>
+<body>
+
+<!-- ═══ LOCK ═══ -->
+<div id="lock">
+ <div class="lk">
+  <div class="lk-logo">
+   <svg viewBox="0 0 352.22 116.43" xmlns="http://www.w3.org/2000/svg">
+    <path fill="#E8006B" d="m31.22,105.2c-1.89.81-4.15,1.33-6.99,1.33-6.91,0-12.03-5.12-12.03-13.98,0-7.97,4.39-14.06,11.95-14.06,3.33,0,5.53.73,7.07,1.46v-9.85c-1.99-.57-4.65-1.04-7.48-1.04-14.96,0-23.74,10.41-23.74,23.98,0,14.39,8.62,23.01,21.87,23.01,3.75,0,7.09-.6,9.35-1.33v-9.51Z"/>
+    <path fill="#E8006B" d="m147.77,68.96c-12.27,0-21.46,8.62-21.46,23.82,0,14.23,8.22,22.73,19.79,23.28v-8.95c-4.13-.79-6.63-5.2-7.37-10.91h29.3c.24-1.3.32-3.01.32-4.8v-.9c-.64-12.81-8.44-21.54-20.59-21.54Zm8.07,18.86h-16.96c.9-5.32,3.48-10,8.64-10,4.82,0,7.41,4.61,8.32,10Z"/>
+    <path fill="#E8006B" d="m268.78,68.96c-12.27,0-21.46,8.62-21.46,23.82,0,14.23,8.22,22.73,19.79,23.28v-8.95c-4.13-.79-6.63-5.2-7.37-10.91h29.3c.24-1.3.32-3.01.32-4.8v-.9c-.64-12.81-8.44-21.54-20.59-21.54Zm8.07,18.86h-16.96c.9-5.32,3.48-10,8.64-10,4.82,0,7.41,4.61,8.32,10Z"/>
+    <path fill="#E8006B" d="m52.77,56.51c-6.69-2.11-10.48-8.61-10.42-18.58h29.5c.07-.37.07-.73.07-1.25,0-8.05-3.29-18.23-14.94-18.23-9.59,0-17.28,7.61-17.28,21.23,0,9.64,4.92,17.02,13.06,19.09v-2.27Zm3.93-36c10.54,0,12.45,10.76,12.37,15.15h-26.43c.73-6.52,4.91-15.15,14.06-15.15Z"/>
+    <rect fill="#E8006B" x="327.42" y="106.9" width="24.8" height="9.21"/>
+    <path fill="#E8006B" d="m231.91,87.9c-5.2-2.19-6.91-3.49-6.91-6.01s1.95-4.31,5.61-4.31c3.41,0,6.58,1.3,8.53,2.36v-9.46c-2.42-.89-5.5-1.52-8.94-1.52-10.08,0-16.58,6.18-16.58,14.31,0,4.96,3.09,9.76,11.54,13.17,4.96,2.11,6.5,3.58,6.5,6.34s-2.03,4.55-6.26,4.55c-3.74,0-8.21-1.63-10.57-3.01v9.8c2.89,1.17,6.64,1.91,10.49,1.91,11.3,0,17.8-5.69,17.8-14.31,0-6.26-3.58-10.65-11.22-13.82Z"/>
+    <path fill="#E8006B" d="m310.24,87.9c-5.2-2.19-6.91-3.49-6.91-6.01s1.95-4.31,5.61-4.31c3.41,0,6.58,1.3,8.53,2.36v-9.46c-2.42-.89-5.5-1.52-8.94-1.52-10.08,0-16.58,6.18-16.58,14.31,0,4.96,3.09,9.76,11.54,13.17,4.96,2.11,6.5,3.58,6.5,6.34s-2.03,4.55-6.26,4.55c-3.74,0-8.21-1.63-10.57-3.01v9.8c2.89,1.17,6.64,1.91,10.49,1.91,11.3,0,17.8-5.69,17.8-14.31,0-6.26-3.58-10.65-11.22-13.82Z"/>
+    <path fill="#E8006B" d="m91.19,36.65c-5.42-2.27-8.35-4.39-8.35-8.86,0-3.81,3.22-7.47,8.57-7.47,2.56,0,5.12.95,7.25,2.49v-2.82c-1.85-1.04-4.23-1.79-7.03-1.79-7.25,0-11.42,4.83-11.42,10.25,0,4.69,3.44,7.98,9.74,10.47,5.78,2.34,8.64,4.98,8.64,9.66,0,5.34-4.91,8.42-9.88,8.42-2.71,0-6.3-1.39-8.49-2.78v2.85c2.43,1.3,5.23,2.05,8.35,2.05,7.25,0,12.67-4.17,12.67-10.98,0-6-3.81-9-10.03-11.49Z"/>
+    <path fill="#E8006B" d="m210.7,101.69v-14.01h-12.03v10.44c0,5.12-3.5,8.46-7.4,8.46-4.96,0-6.91-4.31-6.91-11.14v-25.2h-12.03v26.99c0,13.58,5.85,19.18,14.47,19.18.53,0,6.84.63,13.01-4.45h.24v4.15h10.65v-14.42Z"/>
+    <path fill="#E8006B" d="m109.86,70.99c-2.59-1.18-5.56-1.81-8.83-1.81-.17,0-.32.02-.49.02v8.86c.08,0,.16-.02.24-.02,6.18,0,8.7,7.56,8.7,14.64,0,8.05-3.09,14.8-8.78,14.8s-8.95-6.67-8.95-14.72h-12.19c0,.08,0,.16,0,.24,0,14.72,8.78,23.34,20.98,23.34h0c4.11,0,7.67-1.54,9.43-3.79h.24v3.55h11.79V0h-12.03v71.03l-.11-.04Z"/>
+    <path fill="#E8006B" d="m56.89,107.26s-.05,0-.08,0c-5.85,0-8.95-6.67-8.95-14.72,0-6.91,2.36-14.72,9.03-14.72,5.58,0,8.17,6.18,8.62,12.59h12.21c-.67-12.76-8.47-21.46-20.59-21.46s-21.47,8.62-21.47,23.83,8.78,23.34,20.98,23.34c.08,0,.16,0,.24,0v-8.87Z"/>
+    <path fill="#E8006B" d="m28.8.12v25.4h-.22c-1.99-3.86-6.48-6.45-10.84-7.13v2.15c6.43,1.11,11.06,6.72,11.06,13.99v8.05c0,6.44-5.2,14.5-13.69,14.5-5.59,0-9.65-3.07-12.08-7.4H.02c2.84,5.89,8.15,9.53,14.66,9.53,6,0,11.86-3.44,14.2-8.71h.27v7.83h2.21V.12h-2.56Z"/>
+   </svg>
+  </div>
+  <div class="lk-badge"><div class="lk-dot"></div>Document pédagogique protégé</div>
+  <h1 class="lk-title">Accès au TP Réseaux</h1>
+  <p class="lk-sub">Entre le mot de passe pour accéder au<br><strong>TP Cisco Packet Tracer</strong> — Campus Marseille</p>
+  <label class="lk-lbl" for="pwd">Mot de passe</label>
+  <div class="lk-field">
+   <input type="password" id="pwd" class="lk-input" placeholder="Mot de passe..." autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();checkPwd();}">
+   <button class="lk-eye" type="button" aria-label="Voir/masquer" onclick="var i=document.getElementById('pwd');i.type=i.type==='password'?'text':'password';">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+   </button>
+  </div>
+  <button class="lk-btn" type="button" onclick="checkPwd()">Accéder au TP</button>
+  <div class="lk-err" id="lkerr"></div>
+  <div class="lk-author"><strong>Créatrice :</strong> LUKUNKU KIBILA SARAH<br>Coordinatrice pédagogique · DesCODEuses<br>Matrice atelier — Peer to Peer · Pratique</div>
+ </div>
+</div>
+
+<!-- ═══ TOPBAR ═══ -->
+<nav class="topbar">
+ <div class="tb-l">
+  <div class="tb-logo">
+   <svg viewBox="0 0 352.22 116.43" xmlns="http://www.w3.org/2000/svg">
+    <path d="m31.22,105.2c-1.89.81-4.15,1.33-6.99,1.33-6.91,0-12.03-5.12-12.03-13.98,0-7.97,4.39-14.06,11.95-14.06,3.33,0,5.53.73,7.07,1.46v-9.85c-1.99-.57-4.65-1.04-7.48-1.04-14.96,0-23.74,10.41-23.74,23.98,0,14.39,8.62,23.01,21.87,23.01,3.75,0,7.09-.6,9.35-1.33v-9.51Z"/><path d="m147.77,68.96c-12.27,0-21.46,8.62-21.46,23.82,0,14.23,8.22,22.73,19.79,23.28v-8.95c-4.13-.79-6.63-5.2-7.37-10.91h29.3c.24-1.3.32-3.01.32-4.8v-.9c-.64-12.81-8.44-21.54-20.59-21.54Zm8.07,18.86h-16.96c.9-5.32,3.48-10,8.64-10,4.82,0,7.41,4.61,8.32,10Z"/><path d="m268.78,68.96c-12.27,0-21.46,8.62-21.46,23.82,0,14.23,8.22,22.73,19.79,23.28v-8.95c-4.13-.79-6.63-5.2-7.37-10.91h29.3c.24-1.3.32-3.01.32-4.8v-.9c-.64-12.81-8.44-21.54-20.59-21.54Zm8.07,18.86h-16.96c.9-5.32,3.48-10,8.64-10,4.82,0,7.41,4.61,8.32,10Z"/><path d="m52.77,56.51c-6.69-2.11-10.48-8.61-10.42-18.58h29.5c.07-.37.07-.73.07-1.25,0-8.05-3.29-18.23-14.94-18.23-9.59,0-17.28,7.61-17.28,21.23,0,9.64,4.92,17.02,13.06,19.09v-2.27Zm3.93-36c10.54,0,12.45,10.76,12.37,15.15h-26.43c.73-6.52,4.91-15.15,14.06-15.15Z"/><rect x="327.42" y="106.9" width="24.8" height="9.21"/><path d="m231.91,87.9c-5.2-2.19-6.91-3.49-6.91-6.01s1.95-4.31,5.61-4.31c3.41,0,6.58,1.3,8.53,2.36v-9.46c-2.42-.89-5.5-1.52-8.94-1.52-10.08,0-16.58,6.18-16.58,14.31,0,4.96,3.09,9.76,11.54,13.17,4.96,2.11,6.5,3.58,6.5,6.34s-2.03,4.55-6.26,4.55c-3.74,0-8.21-1.63-10.57-3.01v9.8c2.89,1.17,6.64,1.91,10.49,1.91,11.3,0,17.8-5.69,17.8-14.31,0-6.26-3.58-10.65-11.22-13.82Z"/><path d="m310.24,87.9c-5.2-2.19-6.91-3.49-6.91-6.01s1.95-4.31,5.61-4.31c3.41,0,6.58,1.3,8.53,2.36v-9.46c-2.42-.89-5.5-1.52-8.94-1.52-10.08,0-16.58,6.18-16.58,14.31,0,4.96,3.09,9.76,11.54,13.17,4.96,2.11,6.5,3.58,6.5,6.34s-2.03,4.55-6.26,4.55c-3.74,0-8.21-1.63-10.57-3.01v9.8c2.89,1.17,6.64,1.91,10.49,1.91,11.3,0,17.8-5.69,17.8-14.31,0-6.26-3.58-10.65-11.22-13.82Z"/><path d="m91.19,36.65c-5.42-2.27-8.35-4.39-8.35-8.86,0-3.81,3.22-7.47,8.57-7.47,2.56,0,5.12.95,7.25,2.49v-2.82c-1.85-1.04-4.23-1.79-7.03-1.79-7.25,0-11.42,4.83-11.42,10.25,0,4.69,3.44,7.98,9.74,10.47,5.78,2.34,8.64,4.98,8.64,9.66,0,5.34-4.91,8.42-9.88,8.42-2.71,0-6.3-1.39-8.49-2.78v2.85c2.43,1.3,5.23,2.05,8.35,2.05,7.25,0,12.67-4.17,12.67-10.98,0-6-3.81-9-10.03-11.49Z"/><path d="m210.7,101.69v-14.01h-12.03v10.44c0,5.12-3.5,8.46-7.4,8.46-4.96,0-6.91-4.31-6.91-11.14v-25.2h-12.03v26.99c0,13.58,5.85,19.18,14.47,19.18.53,0,6.84.63,13.01-4.45h.24v4.15h10.65v-14.42Z"/><path d="m109.86,70.99c-2.59-1.18-5.56-1.81-8.83-1.81-.17,0-.32.02-.49.02v8.86c.08,0,.16-.02.24-.02,6.18,0,8.7,7.56,8.7,14.64,0,8.05-3.09,14.8-8.78,14.8s-8.95-6.67-8.95-14.72h-12.19c0,.08,0,.16,0,.24,0,14.72,8.78,23.34,20.98,23.34h0c4.11,0,7.67-1.54,9.43-3.79h.24v3.55h11.79V0h-12.03v71.03l-.11-.04Z"/><path d="m56.89,107.26s-.05,0-.08,0c-5.85,0-8.95-6.67-8.95-14.72,0-6.91,2.36-14.72,9.03-14.72,5.58,0,8.17,6.18,8.62,12.59h12.21c-.67-12.76-8.47-21.46-20.59-21.46s-21.47,8.62-21.47,23.83,8.78,23.34,20.98,23.34c.08,0,.16,0,.24,0v-8.87Z"/><path d="m28.8.12v25.4h-.22c-1.99-3.86-6.48-6.45-10.84-7.13v2.15c6.43,1.11,11.06,6.72,11.06,13.99v8.05c0,6.44-5.2,14.5-13.69,14.5-5.59,0-9.65-3.07-12.08-7.4H.02c2.84,5.89,8.15,9.53,14.66,9.53,6,0,11.86-3.44,14.2-8.71h.27v7.83h2.21V.12h-2.56Z"/>
+   </svg>
+  </div>
+  <div class="tb-sep"></div>
+  <div class="tb-info">
+   <div class="tb-title">TP Cisco Packet Tracer</div>
+   <div class="tb-sub">Campus Marseille · OSI</div>
+  </div>
+ </div>
+ <div class="tb-r">
+  <span class="badge b-rose">Atelier</span>
+  <span class="badge b-blue" id="score-badge" style="display:none"></span>
+ </div>
+</nav>
+
+<!-- ═══ PAGE ═══ -->
+<div class="page">
+
+ <!-- HERO -->
+ <div class="hero">
+  <div class="hero-top">
+   <div class="hero-ey">Atelier pratique — Modèle OSI appliqué</div>
+   <h1>Construire un réseau local<br><em>de A à Z</em></h1>
+   <p class="hero-desc">Switch Cisco 2960 · Routeur 2811 · CLI IOS · Validation ping</p>
+   <div class="hero-chips">
+    <span class="chip">5 étapes</span><span class="chip">60 min</span>
+    <span class="chip">Cisco IOS CLI</span><span class="chip">Peer to Peer · Pratique</span>
+   </div>
+  </div>
+  <div class="hero-bot">
+   <div class="hero-stats">
+    <div class="h-stat"><div class="sv">5</div><div class="sl">Étapes</div></div>
+    <div class="h-stat"><div class="sv">60'</div><div class="sl">Durée</div></div>
+    <div class="h-stat"><div class="sv">3</div><div class="sl">Équip.</div></div>
+    <div class="h-stat"><div class="sv">5</div><div class="sl">Quiz</div></div>
+   </div>
+   <div class="author-pill">
+    <div class="av">LK</div>
+    <div><div class="av-name">LUKUNKU KIBILA SARAH</div><div class="av-role">Coordinatrice pédagogique · DesCODEuses</div></div>
+   </div>
+  </div>
+ </div>
+
+ <!-- PROGRESS -->
+ <div class="prog">
+  <div class="prog-top"><span id="ptxt">Prête ? Commençons l'étape 1</span><strong id="pfrac">0 / 5</strong></div>
+  <div class="prog-track"><div class="prog-fill" id="pfill"></div></div>
+ </div>
+
+ <!-- TOPOLOGIE -->
+ <div class="card">
+  <div class="sec-lbl">Topologie du réseau à construire</div>
+  <div class="topo-wrap">
+   <svg class="topo-svg" viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg">
+    <rect x="15" y="55" width="130" height="66" rx="8" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1"/>
+    <text x="80" y="82" text-anchor="middle" font-family="Syne,sans-serif" font-size="12" font-weight="600" fill="#0C447C">PC-Fatima</text>
+    <text x="80" y="99" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#185FA5">192.168.1.10</text>
+    <text x="80" y="113" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#378ADD">masque /24</text>
+    <rect x="555" y="55" width="130" height="66" rx="8" fill="#E6F1FB" stroke="#85B7EB" stroke-width="1"/>
+    <text x="620" y="82" text-anchor="middle" font-family="Syne,sans-serif" font-size="12" font-weight="600" fill="#0C447C">PC-Karim</text>
+    <text x="620" y="99" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#185FA5">192.168.1.20</text>
+    <text x="620" y="113" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#378ADD">masque /24</text>
+    <rect x="280" y="35" width="140" height="52" rx="8" fill="#FAEEDA" stroke="#FAC775" stroke-width="1"/>
+    <text x="350" y="59" text-anchor="middle" font-family="Syne,sans-serif" font-size="12" font-weight="600" fill="#633806">Switch Cisco 2960</text>
+    <text x="350" y="76" text-anchor="middle" font-family="DM Mono,monospace" font-size="10" fill="#854F0B">Fa0/1 · Fa0/2 · Fa0/3</text>
+    <rect x="280" y="142" width="140" height="48" rx="8" fill="#E1F5EE" stroke="#9FE1CB" stroke-width="1"/>
+    <text x="350" y="163" text-anchor="middle" font-family="Syne,sans-serif" font-size="12" font-weight="600" fill="#085041">Routeur 2811</text>
+    <text x="350" y="181" text-anchor="middle" font-family="DM Mono,monospace" font-size="11" fill="#0F6E56">192.168.1.1 /24</text>
+    <line x1="145" y1="88" x2="280" y2="65" stroke="#378ADD" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <line x1="555" y1="88" x2="420" y2="65" stroke="#378ADD" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <line x1="350" y1="87" x2="350" y2="142" stroke="#1D9E75" stroke-width="1.5" stroke-dasharray="5,3"/>
+    <text x="206" y="70" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#185FA5">câble droit</text>
+    <text x="494" y="70" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="9" fill="#185FA5">câble droit</text>
+    <text x="373" y="120" font-family="DM Sans,sans-serif" font-size="9" fill="#0F6E56">câble croisé</text>
+    <circle cx="145" cy="88" r="3.5" fill="#378ADD"/>
+    <circle cx="555" cy="88" r="3.5" fill="#378ADD"/>
+    <circle cx="350" cy="87" r="3" fill="#1D9E75"/>
+    <circle cx="350" cy="142" r="3" fill="#1D9E75"/>
+   </svg>
+   <div class="scroll-hint">← Faire glisser pour voir →</div>
+  </div>
+  <div class="tbl-wrap">
+   <table class="tbl">
+    <thead><tr><th>Équipement</th><th>Interface</th><th>Adresse IP</th><th>Passerelle</th></tr></thead>
+    <tbody>
+     <tr><td><span class="eq" style="background:#E6F1FB;color:#0C447C;border:1px solid #B5D4F4">PC-Fatima</span></td><td class="m">FastEthernet0</td><td class="m">192.168.1.10/24</td><td class="m">192.168.1.1</td></tr>
+     <tr><td><span class="eq" style="background:#E6F1FB;color:#0C447C;border:1px solid #B5D4F4">PC-Karim</span></td><td class="m">FastEthernet0</td><td class="m">192.168.1.20/24</td><td class="m">192.168.1.1</td></tr>
+     <tr><td><span class="eq" style="background:#FAEEDA;color:#633806;border:1px solid #FAC775">Switch 2960</span></td><td class="m">Fa0/1,Fa0/2,Fa0/3</td><td style="color:var(--tx3)">—</td><td style="color:var(--tx3)">—</td></tr>
+     <tr><td><span class="eq" style="background:#E1F5EE;color:#085041;border:1px solid #9FE1CB">Routeur 2811</span></td><td class="m">FastEthernet0/0</td><td class="m">192.168.1.1/24</td><td style="color:var(--tx3)">—</td></tr>
+    </tbody>
+   </table>
+  </div>
+ </div>
+
+ <!-- ═══ ÉTAPES ═══ -->
+ <div class="steps" id="steps-container">
+
+  <!-- ÉTAPE 1 -->
+  <div class="step active" id="s1">
+   <div class="step-hd" onclick="toggleStep(1)">
+    <div class="snum"><span class="snum-txt">1</span><svg class="dn-chk" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <div class="smeta"><h3>Placer les équipements dans Packet Tracer</h3><p>Interface · Workspace · Glisser-déposer</p></div>
+    <span class="stag b-blue">Découverte</span>
+    <svg class="schev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+   </div>
+   <div class="sbody">
+    <div class="sdiv"></div>
+    <div class="narr">"Tu lances Packet Tracer pour la première fois. La grande zone blanche est ton espace de travail. En bas, une palette d'équipements attend — switches, routeurs, PC. Ta mission : construire le réseau du schéma de zéro."</div>
+    <ul class="actions">
+     <li class="act"><div class="an">1</div><div>Lance <strong>Cisco Packet Tracer</strong>. La grande zone blanche centrale est ton espace de travail.</div></li>
+     <li class="act"><div class="an">2</div><div>En bas à gauche, clique sur <strong>End Devices</strong> (icône PC). Glisse <strong>2 PC génériques</strong> dans la zone de travail.</div></li>
+     <li class="act"><div class="an">3</div><div>Clique sur <strong>Network Devices → Switches</strong>. Place un <strong>Cisco 2960</strong> au centre.</div></li>
+     <li class="act"><div class="an">4</div><div>Clique sur <strong>Network Devices → Routers</strong>. Place un <strong>Cisco 2811</strong> en dessous du switch.</div></li>
+     <li class="act"><div class="an">5</div><div>Double-clique sur chaque PC → onglet <strong>Config</strong> → champ <em>Display Name</em> : renomme-les <code>PC-Fatima</code> et <code>PC-Karim</code>.</div></li>
+    </ul>
+    <div class="tip"><span>💡</span><span>Utilise <kbd>Ctrl+Z</kbd> pour annuler. Tu peux déplacer les équipements à tout moment en les glissant.</span></div>
+    <div class="quiz-wrap">
+     <p class="quiz-q">Où se trouve la palette d'équipements dans Packet Tracer ?</p>
+     <div class="quiz-opts">
+      <button class="qopt" type="button" onclick="doAnswer(this,false,1)"><div class="odot"></div>Dans le menu File en haut de l'écran</button>
+      <button class="qopt" type="button" onclick="doAnswer(this,true,1)"><div class="odot"></div>En bas à gauche de l'interface, sous la zone de travail</button>
+      <button class="qopt" type="button" onclick="doAnswer(this,false,1)"><div class="odot"></div>Directement dans la zone de travail blanche</button>
+     </div>
+     <div class="fb" id="fb1"><svg class="fb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></svg><span id="fb1t"></span></div>
+    </div>
+    <button class="btn-nxt" id="nx1" onclick="nextStep(1)">Étape 2 — Câbler les équipements <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+   </div>
+  </div>
+
+  <!-- ÉTAPE 2 -->
+  <div class="step" id="s2">
+   <div class="step-hd" onclick="toggleStep(2)">
+    <div class="snum"><span class="snum-txt">2</span><svg class="dn-chk" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <div class="smeta"><h3>Câbler les équipements</h3><p>Câbles droits · Câble croisé · Voyants de statut</p></div>
+    <span class="stag b-amber">Câblage</span>
+    <svg class="schev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+   </div>
+   <div class="sbody">
+    <div class="sdiv"></div>
+    <div class="narr">"Les équipements sont posés mais ne communiquent pas encore. Dans un vrai datacenter on branche des câbles RJ45 — ici deux clics suffisent. Le bon type de câble est crucial !"</div>
+    <ul class="actions">
+     <li class="act"><div class="an">1</div><div>En bas, clique sur <strong>Connections</strong> (icône éclair). Sélectionne <strong>Copper Straight-Through</strong> (câble droit — ligne noire pleine).</div></li>
+     <li class="act"><div class="an">2</div><div>Relie <strong>PC-Fatima</strong> (<code>FastEthernet0</code>) au <strong>Switch</strong> (<code>FastEthernet0/1</code>).</div></li>
+     <li class="act"><div class="an">3</div><div>Répète : relie <strong>PC-Karim</strong> (<code>FastEthernet0</code>) au <strong>Switch</strong> (<code>FastEthernet0/2</code>).</div></li>
+     <li class="act"><div class="an">4</div><div>Change de câble : <strong>Copper Cross-Over</strong> (câble croisé, tirets). Relie le <strong>Switch</strong> (<code>Fa0/3</code>) → <strong>Routeur</strong> (<code>FastEthernet0/0</code>).</div></li>
+     <li class="act"><div class="an">5</div><div>Les voyants passent au <strong style="color:#27500A">vert</strong> = connexion OK. Orange = en cours, attends quelques secondes.</div></li>
+    </ul>
+    <div class="tip"><span>💡</span><span><strong>Mémo :</strong> équipements <em>différents</em> → câble droit · équipements <em>identiques</em> → câble croisé.</span></div>
+    <div class="quiz-wrap">
+     <p class="quiz-q">Quel câble utilise-t-on pour relier un PC à un switch ?</p>
+     <div class="quiz-opts">
+      <button class="qopt" type="button" onclick="doAnswer(this,true,2)"><div class="odot"></div>Câble droit — Copper Straight-Through</button>
+      <button class="qopt" type="button" onclick="doAnswer(this,false,2)"><div class="odot"></div>Câble croisé — Copper Cross-Over</button>
+      <button class="qopt" type="button" onclick="doAnswer(this,false,2)"><div class="odot"></div>Câble console bleu (RS-232)</button>
+     </div>
+     <div class="fb" id="fb2"><svg class="fb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></svg><span id="fb2t"></span></div>
+    </div>
+    <button class="btn-nxt" id="nx2" onclick="nextStep(2)">Étape 3 — Configurer les adresses IP <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+   </div>
+  </div>
+
+  <!-- ÉTAPE 3 -->
+  <div class="step" id="s3">
+   <div class="step-hd" onclick="toggleStep(3)">
+    <div class="snum"><span class="snum-txt">3</span><svg class="dn-chk" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <div class="smeta"><h3>Configurer les adresses IP des PC</h3><p>IP statique · Masque de sous-réseau · Passerelle</p></div>
+    <span class="stag b-teal">Config IP</span>
+    <svg class="schev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+   </div>
+   <div class="sbody">
+    <div class="sdiv"></div>
+    <div class="narr">"Les câbles sont branchés. Mais sans adresse IP, les paquets ne savent pas où aller — comme une enveloppe sans adresse. Donnons une identité réseau à chaque PC."</div>
+    <ul class="actions">
+     <li class="act"><div class="an">1</div><div>Double-clique sur <strong>PC-Fatima</strong> → onglet <strong>Desktop</strong> → <strong>IP Configuration</strong> → coche <strong>Static</strong>.</div></li>
+     <li class="act"><div class="an">2</div><div>IP Address : <code>192.168.1.10</code> · Subnet Mask : <code>255.255.255.0</code> · Default Gateway : <code>192.168.1.1</code></div></li>
+     <li class="act"><div class="an">3</div><div>Ferme. Double-clique sur <strong>PC-Karim</strong> → même chemin → coche <strong>Static</strong>.</div></li>
+     <li class="act"><div class="an">4</div><div>IP Address : <code>192.168.1.20</code> · Subnet Mask : <code>255.255.255.0</code> · Default Gateway : <code>192.168.1.1</code></div></li>
+    </ul>
+    <div class="cmd"><span class="cmd-lbl">Vérification · Command Prompt</span><span class="cp">C:\&gt;</span> <span class="cc">ipconfig</span><br><br><span class="cm"># Résultat attendu (PC-Fatima) :</span><br><span class="co">IPv4 Address. . .: 192.168.1.10</span><br><span class="co">Subnet Mask . . .: 255.255.255.0</span><br><span class="co">Default Gateway .: 192.168.1.1</span></div>
+    <div class="quiz-wrap">
+     <p class="quiz-q">Que représente le masque <code>255.255.255.0</code> (noté /24) ?</p>
+     <div class="quiz-opts">
+      <button class="qopt" type="button" onclick="doAnswer(this,false,3)"><div class="odot"></div>Le réseau peut accueillir 255 routeurs maximum</button>
+      <button class="qopt" type="button" onclick="doAnswer(this,true,3)"><div class="odot"></div>Les 3 premiers octets identifient le réseau, le 4ème identifie la machine</button>
+      <button class="qopt" type="button" onclick="doAnswer(this,false,3)"><div class="odot"></div>Il faut 255 câbles pour interconnecter ce réseau</button>
+     </div>
+     <div class="fb" id="fb3"><svg class="fb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></svg><span id="fb3t"></span></div>
+    </div>
+    <button class="btn-nxt" id="nx3" onclick="nextStep(3)">Étape 4 — Configurer le routeur en CLI <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+   </div>
+  </div>
+
+  <!-- ÉTAPE 4 -->
+  <div class="step" id="s4">
+   <div class="step-hd" onclick="toggleStep(4)">
+    <div class="snum"><span class="snum-txt">4</span><svg class="dn-chk" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <div class="smeta"><h3>Configurer le routeur en ligne de commande</h3><p>Cisco IOS · enable · no shutdown</p></div>
+    <span class="stag b-blue">CLI Cisco</span>
+    <svg class="schev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+   </div>
+   <div class="sbody">
+    <div class="sdiv"></div>
+    <div class="narr">"Les PC sont configurés. Maintenant le routeur — la porte de sortie du réseau local. Il se configure en ligne de commande avec Cisco IOS. Bienvenue dans la vraie vie réseau !"</div>
+    <ul class="actions">
+     <li class="act"><div class="an">1</div><div>Double-clique sur le <strong>Routeur 2811</strong> → onglet <strong>CLI</strong>.</div></li>
+     <li class="act"><div class="an">2</div><div>Appuie sur <kbd>Entrée</kbd>. Le prompt <code>Router&gt;</code> apparaît.</div></li>
+     <li class="act"><div class="an">3</div><div>Tape les commandes ci-dessous dans l'ordre, <kbd>Entrée</kbd> après chacune.</div></li>
+     <li class="act"><div class="an">4</div><div>Après <code>no shutdown</code>, le message <em>FastEthernet0/0, changed state to up</em> confirme que c'est actif.</div></li>
+    </ul>
+    <div class="cmd"><span class="cmd-lbl">Routeur 2811 · CLI</span><span class="cp">Router&gt;</span> <span class="cc">enable</span><br><span class="cp">Router#</span> <span class="cc">configure terminal</span><br><span class="cm">! Mode configuration globale</span><br><span class="cp">Router(config)#</span> <span class="cc">interface FastEthernet0/0</span><br><span class="cp">Router(config-if)#</span> <span class="cc">ip address 192.168.1.1 255.255.255.0</span><br><span class="cp">Router(config-if)#</span> <span class="cc">no shutdown</span><br><span class="cm">! Active l'interface</span><br><span class="cp">Router(config-if)#</span> <span class="cc">exit</span><br><span class="cp">Router(config)#</span> <span class="cc">exit</span><br><span class="cp">Router#</span> <span class="cc">write memory</span></div>
+    <div class="cmd"><span class="cmd-lbl">Vérification</span><span class="cp">Router#</span> <span class="cc">show ip interface brief</span><br><br><span class="cm"># Résultat attendu :</span><br><span class="co">FastEthernet0/0   192.168.1.1   YES   up   up</span></div>
+    <div class="quiz-wrap">
+     <p class="quiz-q">À quoi sert la commande <code>no shutdown</code> sur une interface Cisco ?</p>
+     <div class="quiz-opts">
+      <button class="qopt" type="button" onclick="doAnswer(this,false,4)"><div class="odot"></div>Elle éteint le routeur proprement</button>
+      <button class="qopt" type="button" onclick="doAnswer(this,false,4)"><div class="odot"></div>Elle supprime l'adresse IP de l'interface</button>
+      <button class="qopt" type="button" onclick="doAnswer(this,true,4)"><div class="odot"></div>Elle active l'interface — les interfaces Cisco sont désactivées par défaut</button>
+     </div>
+     <div class="fb" id="fb4"><svg class="fb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></svg><span id="fb4t"></span></div>
+    </div>
+    <button class="btn-nxt" id="nx4" onclick="nextStep(4)">Étape 5 — Tester avec ping <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+   </div>
+  </div>
+
+  <!-- ÉTAPE 5 -->
+  <div class="step" id="s5">
+   <div class="step-hd" onclick="toggleStep(5)">
+    <div class="snum"><span class="snum-txt">5</span><svg class="dn-chk" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+    <div class="smeta"><h3>Tester la connectivité avec ping</h3><p>Validation · Dépannage · Mode simulation</p></div>
+    <span class="stag b-teal">Validation</span>
+    <svg class="schev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+   </div>
+   <div class="sbody">
+    <div class="sdiv"></div>
+    <div class="narr">"Le réseau est construit. L'heure de vérité : PC-Fatima peut-elle parler à PC-Karim ? On lance les pings — le test ultime de la connectivité réseau !"</div>
+    <ul class="actions">
+     <li class="act"><div class="an">1</div><div><strong>PC-Fatima</strong> → Desktop → <strong>Command Prompt</strong>. Teste vers PC-Karim :</div></li>
+    </ul>
+    <div class="cmd"><span class="cmd-lbl">Test PC ↔ PC</span><span class="cp">C:\&gt;</span> <span class="cc">ping 192.168.1.20</span><br><br><span class="cm"># 4 réponses attendues :</span><br><span class="co">Reply from 192.168.1.20: bytes=32 time&lt;1ms TTL=128</span><br><span class="co">Reply from 192.168.1.20: bytes=32 time&lt;1ms TTL=128</span></div>
+    <ul class="actions">
+     <li class="act"><div class="an">2</div><div>Teste vers la passerelle (le routeur) :</div></li>
+    </ul>
+    <div class="cmd"><span class="cmd-lbl">Test PC → Routeur</span><span class="cp">C:\&gt;</span> <span class="cc">ping 192.168.1.1</span><br><br><span class="co">Reply from 192.168.1.1: bytes=32 time=1ms TTL=255</span></div>
+    <ul class="actions">
+     <li class="act"><div class="an">3</div><div>Active le mode <strong>Simulation</strong> (horloge en bas à droite) et relance un ping — vois les paquets voyager visuellement !</div></li>
+     <li class="act"><div class="an">4</div><div>Si <em style="color:var(--coral-800)">Request timed out</em> : vérifie IPs, câblage, et <code>show ip interface brief</code> sur le routeur.</div></li>
+    </ul>
+    <div class="tip"><span>🔧</span><span><strong>Dépannage :</strong> voyants câbles verts ? IPs correctes sur les PC ? Routeur affiche "up up" ?</span></div>
+    <div class="quiz-wrap">
+     <p class="quiz-q">Que signifie <code>Request timed out</code> dans un ping ?</p>
+     <div class="quiz-opts">
+      <button class="qopt" type="button" onclick="doAnswer(this,false,5)"><div class="odot"></div>Le ping a réussi mais a pris trop de temps</button>
+      <button class="qopt" type="button" onclick="doAnswer(this,true,5)"><div class="odot"></div>La destination est injoignable — problème de config IP, câble ou interface</button>
+      <button class="qopt" type="button" onclick="doAnswer(this,false,5)"><div class="odot"></div>La machine cible n'a pas Packet Tracer installé</button>
+     </div>
+     <div class="fb" id="fb5"><svg class="fb-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></svg><span id="fb5t"></span></div>
+    </div>
+    <button class="btn-nxt" id="nx5" onclick="finishTP()">Terminer le TP — Voir les résultats <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+   </div>
+  </div>
+
+ </div>
+
+ <!-- DONE -->
+ <div class="done" id="done">
+  <div class="done-ring"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
+  <h2>TP terminé — Réseau opérationnel !</h2>
+  <p>Tu as construit, câblé et configuré un réseau local complet dans Cisco Packet Tracer. Félicitations !</p>
+  <div class="done-grid">
+   <div class="dc"><div class="dv" id="final-score">0/5</div><div class="dl">Bonnes réponses</div></div>
+   <div class="dc"><div class="dv">3</div><div class="dl">Équipements config.</div></div>
+   <div class="dc"><div class="dv">4</div><div class="dl">Câbles posés</div></div>
+  </div>
+  <div class="done-next">
+   <p>Prochaine étape recommandée :</p>
+   <div class="done-next-items">
+    <div class="dn-item" style="background:var(--blue-50);color:var(--blue-800);border-color:var(--blue-100)">TP 2 · Configurer des VLANs</div>
+    <div class="dn-item" style="background:var(--teal-50);color:var(--teal-800);border-color:var(--teal-100)">TP 3 · Routage inter-VLAN</div>
+   </div>
+  </div>
+ </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+ <div class="ft-logo">
+  <svg viewBox="0 0 352.22 116.43" xmlns="http://www.w3.org/2000/svg">
+   <path d="m31.22,105.2c-1.89.81-4.15,1.33-6.99,1.33-6.91,0-12.03-5.12-12.03-13.98,0-7.97,4.39-14.06,11.95-14.06,3.33,0,5.53.73,7.07,1.46v-9.85c-1.99-.57-4.65-1.04-7.48-1.04-14.96,0-23.74,10.41-23.74,23.98,0,14.39,8.62,23.01,21.87,23.01,3.75,0,7.09-.6,9.35-1.33v-9.51Z"/><path d="m28.8.12v25.4h-.22c-1.99-3.86-6.48-6.45-10.84-7.13v2.15c6.43,1.11,11.06,6.72,11.06,13.99v8.05c0,6.44-5.2,14.5-13.69,14.5-5.59,0-9.65-3.07-12.08-7.4H.02c2.84,5.89,8.15,9.53,14.66,9.53,6,0,11.86-3.44,14.2-8.71h.27v7.83h2.21V.12h-2.56Z"/><rect x="327.42" y="106.9" width="24.8" height="9.21"/>
+  </svg>
+ </div>
+ <div class="ft-meta"><strong>LUKUNKU KIBILA SARAH</strong> — Coordinatrice pédagogique · DesCODEuses<br>Matrice atelier · Peer to Peer · Pratique · Campus Marseille</div>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════
+   MOT DE PASSE : 1234
+   Fonctions globales — compatibles tous mobiles
+═══════════════════════════════════════════ */
+
+var _tries = 0;
+
+/* Déverrouiller si session déjà ouverte */
+if (sessionStorage.getItem('dc_ok') === '1') {
+  document.getElementById('lock').style.display = 'none';
+}
+
+/* Vérification mot de passe — appelée inline depuis le bouton */
+function checkPwd() {
+  if (_tries >= 5) return;
+  var val = document.getElementById('pwd').value;
+  if (val === '1234') {
+    document.getElementById('lock').style.display = 'none';
+    sessionStorage.setItem('dc_ok', '1');
+  } else {
+    _tries++;
+    var err = document.getElementById('lkerr');
+    if (_tries >= 5) {
+      err.textContent = 'Trop de tentatives. Rechargez la page.';
+      document.getElementById('pwd').disabled = true;
+    } else {
+      err.textContent = 'Code incorrect. ' + (5 - _tries) + ' essai(s) restant(s).';
+    }
+    err.className = 'lk-err on';
+    document.getElementById('pwd').value = '';
+    document.getElementById('pwd').focus();
+  }
+}
+
+/* ═══ QUIZ & NAVIGATION ═══ */
+var _score = 0;
+var _done  = [false, false, false, false, false];
+
+var _okM = [
+  "Exactement ! La palette est bien en bas à gauche.",
+  "Parfait ! Câble droit pour relier des équipements différents.",
+  "Très bien ! 3 octets = réseau, le 4ème = identifiant machine.",
+  "Bonne réponse ! no shutdown active l'interface — indispensable.",
+  "Exact ! Request timed out = la destination ne répond pas."
+];
+var _koM = [
+  "Pas tout à fait. La palette est en bas à gauche, sous la zone de travail.",
+  "Attention ! PC vers switch = câble droit (Straight-Through).",
+  "Pas exactement. /24 = 3 octets réseau, 1 octet pour l'hôte.",
+  "Attention ! 'no shutdown' annule le shutdown = cela active l'interface.",
+  "Pas tout à fait. Timed out = la cible ne répond pas du tout."
+];
+
+/* Répondre à une question — appelé depuis onclick inline sur chaque bouton */
+function doAnswer(btn, isOk, n) {
+  var opts = btn.parentElement.querySelectorAll('.qopt');
+  for (var i = 0; i < opts.length; i++) {
+    opts[i].disabled = true;
+    opts[i].style.pointerEvents = 'none';
+  }
+  var fb  = document.getElementById('fb'  + n);
+  var fbt = document.getElementById('fb'  + n + 't');
+  var nx  = document.getElementById('nx'  + n);
+  if (isOk) {
+    btn.className = 'qopt ok';
+    fb.className  = 'fb on ok';
+    fb.querySelector('.fb-ic').innerHTML = '<polyline points="20 6 9 17 4 12"/>';
+    fbt.textContent = _okM[n - 1];
+    if (!_done[n - 1]) { _score++; _done[n - 1] = true; }
+  } else {
+    btn.className = 'qopt ko';
+    for (var j = 0; j < opts.length; j++) {
+      if (opts[j].getAttribute('data-correct') === 'true') opts[j].className = 'qopt ok';
+    }
+    fb.className  = 'fb on ko';
+    fb.querySelector('.fb-ic').innerHTML = '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>';
+    fbt.textContent = _koM[n - 1];
+  }
+  nx.className = 'btn-nxt on';
+}
+
+/* Ouvrir/fermer une étape */
+function toggleStep(n) {
+  var el = document.getElementById('s' + n);
+  if (el.className.indexOf('active') !== -1) {
+    el.className = el.className.replace(' active', '').replace('active', '');
+  } else {
+    el.className += ' active';
+  }
+}
+
+/* Passer à l'étape suivante */
+function nextStep(c) {
+  var cur = document.getElementById('s' + c);
+  cur.className = cur.className.replace('active', 'done').trim();
+  updateProg(c);
+  if (c < 5) {
+    var nx = document.getElementById('s' + (c + 1));
+    nx.className += ' active';
+    setTimeout(function () { nx.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 150);
+  }
+}
+
+/* Terminer le TP */
+function finishTP() {
+  var s5 = document.getElementById('s5');
+  s5.className = s5.className.replace('active', 'done').trim();
+  updateProg(5);
+  var d = document.getElementById('done');
+  d.style.display = 'block';
+  document.getElementById('final-score').textContent = _score + '/5';
+  var b = document.getElementById('score-badge');
+  b.textContent = _score + '/5'; b.style.display = 'inline-block';
+  setTimeout(function () { d.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 150);
+}
+
+/* Barre de progression */
+function updateProg(d) {
+  document.getElementById('pfill').style.width = Math.round(d / 5 * 100) + '%';
+  document.getElementById('pfrac').textContent = d + ' / 5';
+  var labels = ['', 'Étape 1 validée !', 'Étape 2 validée !', 'Étape 3 validée !', 'Étape 4 validée !', 'Toutes les étapes terminées !'];
+  document.getElementById('ptxt').textContent = labels[d] || 'En cours...';
+}
+</script>
+</body>
+</html>
